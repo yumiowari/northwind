@@ -1,8 +1,8 @@
 import tkinter as tk
 
-import core.features.order
 from core.model import Model
 from core.view import View
+import core.features.order
 
 class Controller:
     def __init__(self):
@@ -15,3 +15,6 @@ class Controller:
 
     def newOrder(self):
         self.orderview = core.features.order.View(self.view.root)
+
+    def reportRanking(self):
+        pass

@@ -14,4 +14,8 @@ class View:
         self.ordermenu.add_command(label="Cadastrar", command=self.controller.newOrder)
         self.menubar.add_cascade(label="Pedidos", menu=self.ordermenu)
 
+        self.printmenu = tk.Menu(self.menubar, tearoff=0)
+        self.printmenu.add_command(label="Ranking", command=self.controller.reportRanking)
+        self.menubar.add_cascade(label="Imprimir", menu=self.printmenu)
+
         self.root.config(menu=self.menubar)
