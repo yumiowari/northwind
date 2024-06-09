@@ -6,7 +6,7 @@ class View:
         self.controller = controller
 
         self.root.title("Northwind")
-        self.root.geometry("400x300")
+        self.root.geometry("400x400")
 
         self.menubar = tk.Menu(self.root)
 

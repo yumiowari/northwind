@@ -1,11 +1,13 @@
 import tkinter as tk
 
 class View():
-    def __init__(self, root):
+    def __init__(self, root, controller):
         self.root = tk.Toplevel(root)
 
+        self.controller = controller
+
         self.root.title("Realizar Pedido")
-        self.root.geometry("400x300")
+        self.root.geometry("400x400")
 
         self.orderid = tk.StringVar()
         self.orderid.trace_add("write", self.checkOrderid)
@@ -48,6 +50,9 @@ class View():
         self.productqtyLabel = tk.Label(self.root, text="Quantidade:")
         self.productqtyLabel.pack()
         self.productqtyEntry.pack()
+
+        self.confirm = tk.Button(self.root, text="Enviar", command=self.controller.sendOrder)
+        self.confirm.pack()
 
     def checkOrderid(self, var, index, mode):
         orderid = self.orderid.get()
@@ -114,5 +119,3 @@ class View():
                 aux += digit
 
         self.productqty.set(aux)
-
-    
