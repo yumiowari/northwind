@@ -142,7 +142,6 @@ class Model:
             self.shipperid = "'" + self.shipperid + "'"
         else:
             self.shipperid = "null"
-        #
 
         with psycopg.connect( host='localhost', dbname='northwind', user = 'postgres', password = 'postgres') as northwind:  
             with northwind.cursor() as session:
@@ -179,9 +178,9 @@ class Model:
         with psycopg.connect( host='localhost', dbname='northwind', user = 'postgres', password = 'postgres') as northwind:  
             with northwind.cursor() as session:
                 query = "INSERT INTO northwind.order_details VALUES ({}, {}, {}, {}, {})".format(self.orderid,
-                                                                                             self.productid,
-                                                                                             self.unitprice,
-                                                                                             self.qty,
-                                                                                             self.discount)
+                                                                                                 self.productid,
+                                                                                                 self.unitprice,
+                                                                                                 self.qty,
+                                                                                                 self.discount)
                 session.execute(query)                                                              
         #
