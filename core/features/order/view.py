@@ -14,10 +14,20 @@ class View():
         self.customerid = tk.StringVar()
         self.contactnames = self.controller.fillContactnames()
         
-        self.combobox = ttk.Combobox(self.root, values=self.contactnames)
-        self.combobox.bind("<<ComboboxSelected>>", self.fetchCustomerid)
+        self.customersCombobox = ttk.Combobox(self.root, values=self.contactnames)
+        self.customersCombobox.bind("<<ComboboxSelected>>", self.fetchCustomerid)
 
-        self.combobox.pack()
+        self.customersCombobox.pack()
+        #
+
+        # nome do empregado
+        self.employeeid = tk.IntVar()
+        self.lastnames = self.controller.fillLastnames()
+
+        self.employeesCombobox = ttk.Combobox(self.root, values=self.lastnames)
+        self.employeesCombobox.bind("<<ComboboxSelected>>", self.fetchEmployeeid)
+
+        self.employeesCombobox.pack()
         #
 
         self.orderid = tk.StringVar()
@@ -59,12 +69,19 @@ class View():
         self.confirm.pack()
 
     def fetchCustomerid(self, event):
-        contactname = self.combobox.get()
+        contactname = self.customersCombobox.get()
 
         customerid = self.controller.fetchCustomerid(contactname)
 
-        print(customerid)
         self.customerid.set(customerid)
+
+    def fetchEmployeeid(self, event):
+        lastname = self.employeesCombobox.get()
+
+        employeeid = self.controller.fetchEmployeeid(lastname)
+
+        print(employeeid)
+        self.employeeid.set(employeeid)
 
     def checkOrderid(self, var, index, mode):
         orderid = self.orderid.get()

@@ -18,5 +18,15 @@ class Controller:
 
         return customerid
 
+    def fillLastnames(self):
+        lastnames = self.model.fillLastnames()
+
+        return lastnames
+
+    def fetchEmployeeid(self, lastname):
+        employeeid = self.model.fetchEmployeeid(lastname)
+
+        return employeeid
+
     def sendOrder(self):
         self.model.sendOrder()

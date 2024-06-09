@@ -37,6 +37,26 @@ class Model:
 
                 return customerid
 
+    def fillLastnames(self):
+        with psycopg.connect( host='localhost', dbname='northwind', user = 'postgres', password = 'postgres') as northwind:  
+            with northwind.cursor() as session:
+                query = "SELECT lastname FROM northwind.employees"
+                session.execute(query)
+                result = session.fetchall()
+                lastnames = [registro[0] for registro in result]
+
+                return lastnames
+
+    def fetchEmployeeid(self, lastname):
+        with psycopg.connect( host='localhost', dbname='northwind', user = 'postgres', password = 'postgres') as northwind:  
+            with northwind.cursor() as session:
+                query = "SELECT employeeid FROM northwind.employees WHERE lastname = '{}'".format(lastname)
+                session.execute(query)
+                result = session.fetchone()
+                employeeid = result[0]
+
+                return employeeid
+
     def sendOrder(self):
         with psycopg.connect( host='localhost', dbname='northwind', user = 'postgres', password = 'postgres') as northwind:  
             with northwind.cursor() as session:
