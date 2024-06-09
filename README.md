@@ -7,3 +7,5 @@ Feita em Python utilizando os padrões MVC e DAO.
 Dependências:
 
 - Tkinter: `sudo apt install python3-tk`
+
+- Python-PostgreSQL Database Adapter: `sudo apt install python3-psycopg2`
