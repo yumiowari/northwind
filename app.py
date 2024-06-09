@@ -1,5 +1,3 @@
-import tkinter as tk
-
 from core.controller import Controller
 
 def main():

@@ -5,6 +5,10 @@ class Model:
         self.orderid = None
         self.customerid = None
         self.employeeid = None
+        self.productid = None
+        self.unitprice = None
+        self.qty = None
+        self.discount = None
         self.orderdate = None
         self.requireddate = None
         self.shippeddate = None
@@ -57,6 +61,30 @@ class Model:
 
                 return employeeid
 
+    def fillProductnames(self):
+        with psycopg.connect( host='localhost', dbname='northwind', user = 'postgres', password = 'postgres') as northwind:  
+            with northwind.cursor() as session:
+                query = "SELECT productname FROM northwind.products"
+                session.execute(query)
+                result = session.fetchall()
+                products = [registro[0] for registro in result] # remove os parênteses
+
+                return products
+                
+    def fetchProduct(self, productname):
+        with psycopg.connect( host='localhost', dbname='northwind', user = 'postgres', password = 'postgres') as northwind:  
+            with northwind.cursor() as session:
+                query = "SELECT productid, unitprice FROM northwind.products WHERE productname = '{}'".format(productname)
+                session.execute(query)
+                result = session.fetchone()
+                product = {
+                    'name': productname,
+                    'id': result[0],
+                    'unitprice': result[1]
+                }
+
+                return product
+    
     def fillShipnames(self):
         with psycopg.connect( host='localhost', dbname='northwind', user = 'postgres', password = 'postgres') as northwind:  
             with northwind.cursor() as session:
@@ -85,8 +113,8 @@ class Model:
 
                 return ship
 
-    def sendOrder(self, customerid, employeeid, orderdate, requireddate, shippeddate, freight, ship):
-        # gambiarra
+    def sendOrder(self, customerid, employeeid, product, qty, discount, orderdate, requireddate, shippeddate, freight, ship):
+        # orders
         self.customerid = customerid
         self.employeeid = employeeid
         self.orderdate = orderdate
@@ -114,7 +142,6 @@ class Model:
             self.shipperid = "'" + self.shipperid + "'"
         else:
             self.shipperid = "null"
-        #
 
         with psycopg.connect( host='localhost', dbname='northwind', user = 'postgres', password = 'postgres') as northwind:  
             with northwind.cursor() as session:
@@ -140,3 +167,20 @@ class Model:
                                                                                                                                             self.shipcountry,
                                                                                                                                             self.shipperid)
                 session.execute(query)
+        #
+
+        # order_details
+        self.productid = product['id']
+        self.unitprice = product['unitprice']
+        self.qty = qty
+        self.discount = discount
+
+        with psycopg.connect( host='localhost', dbname='northwind', user = 'postgres', password = 'postgres') as northwind:  
+            with northwind.cursor() as session:
+                query = "INSERT INTO northwind.order_details VALUES ({}, {}, {}, {}, {})".format(self.orderid,
+                                                                                                 self.productid,
+                                                                                                 self.unitprice,
+                                                                                                 self.qty,
+                                                                                                 self.discount)
+                session.execute(query)                                                              
+        #

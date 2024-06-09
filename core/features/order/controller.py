@@ -28,6 +28,16 @@ class Controller:
 
         return employeeid
 
+    def fillProductnames(self):
+        productnames = self.model.fillProductnames()
+
+        return productnames
+
+    def fetchProduct(self, productname):
+        product = self.model.fetchProduct(productname)
+
+        return product
+
     def fillShipnames(self):
         shipnames = self.model.fillShipnames()
 
@@ -41,6 +51,9 @@ class Controller:
     def sendOrder(self):
         customerid = self.view.customerid.get()
         employeeid = self.view.employeeid.get()
+        product = self.view.product
+        qty = self.view.qty.get()
+        discount = self.view.discount.get()
         orderdate = self.view.orderdateCalendar.get_date()
         orderdate += ' 00:00:00' # to do
         requireddate = self.view.requireddateCalendar.get_date()
@@ -50,4 +63,4 @@ class Controller:
         freight = self.view.freight.get()
         ship = self.view.ship
 
-        self.model.sendOrder(customerid, employeeid, orderdate, requireddate, shippeddate, freight, ship)
+        self.model.sendOrder(customerid, employeeid, product, qty, discount, orderdate, requireddate, shippeddate, freight, ship)
