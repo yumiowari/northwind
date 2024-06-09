@@ -1,5 +1,6 @@
 import tkinter as tk
 from tkinter import ttk
+from tkcalendar.calendar_ import Calendar
 
 class View():
     def __init__(self, root, controller):
@@ -30,40 +31,32 @@ class View():
         self.employeesCombobox.pack()
         #
 
-        self.orderid = tk.StringVar()
-        self.orderid.trace_add("write", self.checkOrderid)
-        self.orderidEntry = tk.Entry(self.root, textvariable=self.orderid)
-        self.orderidLabel = tk.Label(self.root, text="Número do pedido:")
-        self.orderidLabel.pack()
-        self.orderidEntry.pack()
+        # datas
+        self.orderdateCalendar = Calendar(self.root, date_pattern="yyyy-MM-dd") # usa .get_date() para recupear a data
+        self.orderdateCalendar.pack()
 
-        self.orderdate = tk.StringVar()
-        self.orderdate.trace_add("write", self.checkOrderdate)
-        self.orderdateEntry = tk.Entry(self.root, textvariable=self.orderdate)
-        self.orderdateLabel = tk.Label(self.root, text="Data do pedido:")
-        self.orderdateLabel.pack()
-        self.orderdateEntry.pack()
+        self.requireddateCalendar = Calendar(self.root, date_pattern="yyyy-MM-dd")
+        self.requireddateCalendar.pack()
 
-        self.employee = tk.StringVar()
-        self.employee.trace_add("write", self.checkEmployee)
-        self.employeeEntry = tk.Entry(self.root, textvariable=self.employee)
-        self.employeeLabel = tk.Label(self.root, text="Nome do vendedor:")
-        self.employeeLabel.pack()
-        self.employeeEntry.pack()
+        self.shippeddateCalendar = Calendar(self.root, date_pattern="yyyy-MM-dd")
+        self.shippeddateCalendar.pack()
+        #
 
-        self.productname = tk.StringVar()
-        self.productname.trace_add("write", self.checkProductname)
-        self.productnameEntry = tk.Entry(self.root, textvariable=self.productname)
-        self.productnameLabel = tk.Label(self.root, text="Produto:")
-        self.productnameLabel.pack()
-        self.productnameEntry.pack()
+        # frete
+        self.freight = tk.StringVar()
+        self.freight.trace_add("write", self.checkFreight)
+        self.freightEntry = tk.Entry(self.root, textvariable=self.freight)
+        self.freightEntry.pack()
+        #
 
-        self.productqty = tk.StringVar()
-        self.productqty.trace_add("write", self.checkProductqty)
-        self.productqtyEntry = tk.Entry(self.root, textvariable=self.productqty)
-        self.productqtyLabel = tk.Label(self.root, text="Quantidade:")
-        self.productqtyLabel.pack()
-        self.productqtyEntry.pack()
+        # barco
+        self.ship = {}
+        self.shipname = tk.StringVar()
+        self.shipnames = self.controller.fillShipnames()
+        self.shipsCombobox = ttk.Combobox(self.root, values=self.shipnames)
+        self.shipsCombobox.bind("<<ComboboxSelected>>", self.fetchShip)
+        self.shipsCombobox.pack()
+        # 
 
         self.confirm = tk.Button(self.root, text="Enviar", command=self.controller.sendOrder)
         self.confirm.pack()
@@ -80,60 +73,26 @@ class View():
 
         employeeid = self.controller.fetchEmployeeid(lastname)
 
-        print(employeeid)
         self.employeeid.set(employeeid)
 
-    def checkOrderid(self, var, index, mode):
-        orderid = self.orderid.get()
+    def checkFreight(self, var, index, mode):
+        freight = self.freight.get()
+
+        flag = False
 
         aux = ""
 
-        for digit in orderid:
-            if digit.isdigit():
+        for digit in freight:
+            if digit.isdigit() or (digit == '.' and flag == False):
                 aux += digit
+                if digit == '.':
+                    flag = True
 
-        self.orderid.set(aux)
+        self.freight.set(aux)
 
-    def checkOrderdate(self, var, index, mode):
-        orderdate = self.orderdate.get()
+    def fetchShip(self, event):
+        shipname = self.shipsCombobox.get()
 
-        aux = ""
+        self.shipname.set(shipname)
 
-        for digit in orderdate:
-            if digit.isdigit():
-                aux += digit
-
-        self.orderdate.set(aux)
-
-    def checkEmployee(self, var, index, mode):
-        employee = self.employee.get()
-
-        aux = ""
-
-        for digit in employee:
-            if not digit.isdigit():
-                aux += digit
-
-        self.employee.set(aux)
-
-    def checkProductname(self, var, index, mode):
-        productname = self.productname.get()
-
-        aux = ""
-
-        for digit in productname:
-            if not digit.isdigit():
-                aux += digit
-
-        self.productname.set(aux)
-
-    def checkProductqty(self, var, index, mode):
-        productqty = self.productqty.get()
-
-        aux = ""
-
-        for digit in productqty:
-            if digit.isdigit():
-                aux += digit
-
-        self.productqty.set(aux)
+        self.ship = self.controller.fetchShip(shipname)

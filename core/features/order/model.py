@@ -57,7 +57,67 @@ class Model:
 
                 return employeeid
 
-    def sendOrder(self):
+    def fillShipnames(self):
+        with psycopg.connect( host='localhost', dbname='northwind', user = 'postgres', password = 'postgres') as northwind:  
+            with northwind.cursor() as session:
+                query = "SELECT DISTINCT shipname FROM northwind.orders"
+                session.execute(query)
+                result = session.fetchall()
+                shipnames = [registro[0] for registro in result]
+
+                return shipnames
+
+    def fetchShip(self, shipname):
+        with psycopg.connect( host='localhost', dbname='northwind', user = 'postgres', password = 'postgres') as northwind:  
+            with northwind.cursor() as session:
+                query = "SELECT shipaddress, shipcity, shipregion, shippostalcode, shipcountry, shipperid FROM northwind.orders WHERE shipname = '{}'".format(shipname)
+                session.execute(query)
+                result = session.fetchone()
+                ship = {
+                    'name': shipname,
+                    'address': result[0],
+                    'city': result[1],
+                    'region': result[2],
+                    'postalcode': result[3],
+                    'country': result[4],
+                    'id': result[5]
+                }
+
+                return ship
+
+    def sendOrder(self, customerid, employeeid, orderdate, requireddate, shippeddate, freight, ship):
+        self.customerid = "'" + customerid + "'"
+        self.employeeid = employeeid
+        self.orderdate = "'" + orderdate + "'"
+        self.requireddate = "'" + requireddate + "'"
+        self.shippeddate = shippeddate
+        if self.shippeddate != None:
+            self.shippeddate = "'" + self.shippeddate + "'"
+        else:
+            self.shippeddate = "null"
+        self.freight = float(freight)
+        self.shipname = ship['name']
+        self.shipname = "'" + self.shipname + "'"
+        self.shipaddress = ship['address']
+        self.shipaddress = "'" + self.shipaddress + "'"
+        self.shipcity = ship['city']
+        self.shipcity = "'" + self.shipcity + "'"
+        self.shipregion = ship['region']
+        if self.shipregion != None:
+            self.shipregion = "'" + self.shipregion + "'"
+        else:
+            self.shipregion = "null"
+        self.shippostalcode = ship['postalcode']
+        if self.shippostalcode == None:
+            self.shippostalcode = "null"
+        self.shipcountry = ship['country']
+        self.shipcountry = "'" + self.shipcountry + "'"
+        self.shipperid = ship['id']
+        if self.shipperid != None:
+            self.shipperid = "'" + self.shipperid + "'"
+        else:
+            self.shipperid = "null"
+
         with psycopg.connect( host='localhost', dbname='northwind', user = 'postgres', password = 'postgres') as northwind:  
             with northwind.cursor() as session:
                 query = "SELECT MAX(orderid) FROM northwind.orders"
@@ -81,3 +141,4 @@ class Model:
                                                                                                                               self.shippostalcode,
                                                                                                                               self.shipcountry,
                                                                                                                               self.shipperid)
+                session.execute(query)

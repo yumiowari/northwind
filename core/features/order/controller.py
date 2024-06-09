@@ -28,5 +28,26 @@ class Controller:
 
         return employeeid
 
+    def fillShipnames(self):
+        shipnames = self.model.fillShipnames()
+
+        return shipnames
+
+    def fetchShip(self, shipname):
+        ship = self.model.fetchShip(shipname)
+
+        return ship
+
     def sendOrder(self):
-        self.model.sendOrder()
+        customerid = self.view.customerid.get()
+        employeeid = self.view.employeeid.get()
+        orderdate = self.view.orderdateCalendar.get_date()
+        orderdate += ' 00:00:00' # to do
+        requireddate = self.view.requireddateCalendar.get_date()
+        requireddate += ' 00:00:00'
+        shippeddate = self.view.shippeddateCalendar.get_date()
+        shippeddate += ' 00:00:00'
+        freight = self.view.freight.get()
+        ship = self.view.ship
+
+        self.model.sendOrder(customerid, employeeid, orderdate, requireddate, shippeddate, freight, ship)
