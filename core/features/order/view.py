@@ -18,7 +18,7 @@ class View():
         self.customerid = tk.StringVar()
         self.contactnames = self.controller.fillContactnames()
         
-        self.customersLabel = tk.Label(self.top, text='Nome do cliente:')
+        self.customersLabel = tk.Label(self.top, text="Nome do cliente:")
         self.customersCombobox = ttk.Combobox(self.top, values=self.contactnames, state='readonly')
         self.customersCombobox.bind("<<ComboboxSelected>>", self.fetchCustomerid)
 
@@ -30,7 +30,7 @@ class View():
         self.employeeid = tk.IntVar()
         self.lastnames = self.controller.fillLastnames()
 
-        self.employeesLabel = tk.Label(self.top, text='Sobrenome do empregado:')
+        self.employeesLabel = tk.Label(self.top, text="Sobrenome do empregado:")
         self.employeesCombobox = ttk.Combobox(self.top, values=self.lastnames, state='readonly')
         self.employeesCombobox.bind("<<ComboboxSelected>>", self.fetchEmployeeid)
 
@@ -43,7 +43,7 @@ class View():
 
         # data do pedido
         self.orderdateFrame = tk.Frame(self.datas)
-        self.orderdateLabel = tk.Label(self.orderdateFrame, text='Data do pedido:')
+        self.orderdateLabel = tk.Label(self.orderdateFrame, text="Data do pedido:")
         self.orderdateCalendar = Calendar(self.orderdateFrame, date_pattern="yyyy-MM-dd") # usa .get_date() para recupear a data
 
         self.orderdateLabel.pack()
@@ -53,7 +53,7 @@ class View():
 
         # data limite para entrega
         self.requireddateFrame = tk.Frame(self.datas)
-        self.requireddateLabel = tk.Label(self.requireddateFrame, text='Data limite para entrega:')
+        self.requireddateLabel = tk.Label(self.requireddateFrame, text="Data limite para entrega:")
         self.requireddateCalendar = Calendar(self.requireddateFrame, date_pattern="yyyy-MM-dd")
 
         self.requireddateLabel.pack()
@@ -63,7 +63,7 @@ class View():
 
         # data do envio
         self.shippeddateFrame = tk.Frame(self.datas)
-        self.shippeddateLabel = tk.Label(self.shippeddateFrame, text='Data do envio:')
+        self.shippeddateLabel = tk.Label(self.shippeddateFrame, text="Data do envio:")
         self.shippeddateCalendar = Calendar(self.shippeddateFrame, date_pattern="yyyy-MM-dd")
 
         self.shippeddateLabel.pack()
