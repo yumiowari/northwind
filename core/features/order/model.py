@@ -86,10 +86,11 @@ class Model:
                 return ship
 
     def sendOrder(self, customerid, employeeid, orderdate, requireddate, shippeddate, freight, ship):
-        self.customerid = "'" + customerid + "'"
+        # gambiarra
+        self.customerid = customerid
         self.employeeid = employeeid
-        self.orderdate = "'" + orderdate + "'"
-        self.requireddate = "'" + requireddate + "'"
+        self.orderdate = orderdate
+        self.requireddate = requireddate
         self.shippeddate = shippeddate
         if self.shippeddate != None:
             self.shippeddate = "'" + self.shippeddate + "'"
@@ -97,11 +98,8 @@ class Model:
             self.shippeddate = "null"
         self.freight = float(freight)
         self.shipname = ship['name']
-        self.shipname = "'" + self.shipname + "'"
         self.shipaddress = ship['address']
-        self.shipaddress = "'" + self.shipaddress + "'"
         self.shipcity = ship['city']
-        self.shipcity = "'" + self.shipcity + "'"
         self.shipregion = ship['region']
         if self.shipregion != None:
             self.shipregion = "'" + self.shipregion + "'"
@@ -111,12 +109,12 @@ class Model:
         if self.shippostalcode == None:
             self.shippostalcode = "null"
         self.shipcountry = ship['country']
-        self.shipcountry = "'" + self.shipcountry + "'"
         self.shipperid = ship['id']
         if self.shipperid != None:
             self.shipperid = "'" + self.shipperid + "'"
         else:
             self.shipperid = "null"
+        #
 
         with psycopg.connect( host='localhost', dbname='northwind', user = 'postgres', password = 'postgres') as northwind:  
             with northwind.cursor() as session:
@@ -127,18 +125,18 @@ class Model:
 
         with psycopg.connect( host='localhost', dbname='northwind', user = 'postgres', password = 'postgres') as northwind:  
             with northwind.cursor() as session:
-                query = "INSERT INTO northwind.orders VALUES ({}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {})".format(self.orderid,
-                                                                                                                              self.customerid,
-                                                                                                                              self.employeeid,
-                                                                                                                              self.orderdate,
-                                                                                                                              self.requireddate,
-                                                                                                                              self.shippeddate,
-                                                                                                                              self.freight,
-                                                                                                                              self.shipname,
-                                                                                                                              self.shipaddress,
-                                                                                                                              self.shipcity,
-                                                                                                                              self.shipregion,
-                                                                                                                              self.shippostalcode,
-                                                                                                                              self.shipcountry,
-                                                                                                                              self.shipperid)
+                query = "INSERT INTO northwind.orders VALUES ({}, '{}', {}, '{}', '{}', {}, {}, '{}', '{}', '{}', {}, {}, '{}', {})".format(self.orderid,
+                                                                                                                                            self.customerid,
+                                                                                                                                            self.employeeid,
+                                                                                                                                            self.orderdate,
+                                                                                                                                            self.requireddate,
+                                                                                                                                            self.shippeddate,
+                                                                                                                                            self.freight,
+                                                                                                                                            self.shipname,
+                                                                                                                                            self.shipaddress,
+                                                                                                                                            self.shipcity,
+                                                                                                                                            self.shipregion,
+                                                                                                                                            self.shippostalcode,
+                                                                                                                                            self.shipcountry,
+                                                                                                                                            self.shipperid)
                 session.execute(query)

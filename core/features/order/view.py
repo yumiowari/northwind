@@ -8,16 +8,21 @@ class View():
 
         self.controller = controller
 
-        self.root.title("Realizar Pedido")
-        self.root.geometry("400x400")
+        self.root.title("Inserir Pedido")
+        self.root.geometry("800x600")
+
+        self.top = tk.Frame(self.root)
+        self.base = tk.Frame(self.root)
 
         # nome do cliente
         self.customerid = tk.StringVar()
         self.contactnames = self.controller.fillContactnames()
         
-        self.customersCombobox = ttk.Combobox(self.root, values=self.contactnames)
+        self.customersLabel = tk.Label(self.top, text='Nome do cliente:')
+        self.customersCombobox = ttk.Combobox(self.top, values=self.contactnames, state='readonly')
         self.customersCombobox.bind("<<ComboboxSelected>>", self.fetchCustomerid)
 
+        self.customersLabel.pack()
         self.customersCombobox.pack()
         #
 
@@ -25,27 +30,58 @@ class View():
         self.employeeid = tk.IntVar()
         self.lastnames = self.controller.fillLastnames()
 
-        self.employeesCombobox = ttk.Combobox(self.root, values=self.lastnames)
+        self.employeesLabel = tk.Label(self.top, text='Sobrenome do empregado:')
+        self.employeesCombobox = ttk.Combobox(self.top, values=self.lastnames, state='readonly')
         self.employeesCombobox.bind("<<ComboboxSelected>>", self.fetchEmployeeid)
 
+        self.employeesLabel.pack()
         self.employeesCombobox.pack()
         #
 
-        # datas
-        self.orderdateCalendar = Calendar(self.root, date_pattern="yyyy-MM-dd") # usa .get_date() para recupear a data
+        ### datas
+        self.datas = tk.Frame(self.top)
+
+        # data do pedido
+        self.orderdateFrame = tk.Frame(self.datas)
+        self.orderdateLabel = tk.Label(self.orderdateFrame, text='Data do pedido:')
+        self.orderdateCalendar = Calendar(self.orderdateFrame, date_pattern="yyyy-MM-dd") # usa .get_date() para recupear a data
+
+        self.orderdateLabel.pack()
         self.orderdateCalendar.pack()
-
-        self.requireddateCalendar = Calendar(self.root, date_pattern="yyyy-MM-dd")
-        self.requireddateCalendar.pack()
-
-        self.shippeddateCalendar = Calendar(self.root, date_pattern="yyyy-MM-dd")
-        self.shippeddateCalendar.pack()
+        self.orderdateFrame.pack(side=tk.LEFT)
         #
+
+        # data limite para entrega
+        self.requireddateFrame = tk.Frame(self.datas)
+        self.requireddateLabel = tk.Label(self.requireddateFrame, text='Data limite para entrega:')
+        self.requireddateCalendar = Calendar(self.requireddateFrame, date_pattern="yyyy-MM-dd")
+
+        self.requireddateLabel.pack()
+        self.requireddateCalendar.pack()
+        self.requireddateFrame.pack(side=tk.LEFT)
+        #
+
+        # data do envio
+        self.shippeddateFrame = tk.Frame(self.datas)
+        self.shippeddateLabel = tk.Label(self.shippeddateFrame, text='Data do envio:')
+        self.shippeddateCalendar = Calendar(self.shippeddateFrame, date_pattern="yyyy-MM-dd")
+
+        self.shippeddateLabel.pack()
+        self.shippeddateCalendar.pack()
+        self.shippeddateFrame.pack(side=tk.LEFT)
+        #
+
+        self.datas.pack()
+        ###
 
         # frete
         self.freight = tk.StringVar()
         self.freight.trace_add("write", self.checkFreight)
-        self.freightEntry = tk.Entry(self.root, textvariable=self.freight)
+
+        self.freightLabel = tk.Label(self.top, text="Frete:")
+        self.freightEntry = tk.Entry(self.top, textvariable=self.freight)
+
+        self.freightLabel.pack()    
         self.freightEntry.pack()
         #
 
@@ -53,13 +89,23 @@ class View():
         self.ship = {}
         self.shipname = tk.StringVar()
         self.shipnames = self.controller.fillShipnames()
-        self.shipsCombobox = ttk.Combobox(self.root, values=self.shipnames)
+
+        self.shipsLabel = tk.Label(self.top, text="Embarcação:")
+        self.shipsCombobox = ttk.Combobox(self.top, values=self.shipnames, state='readonly')
         self.shipsCombobox.bind("<<ComboboxSelected>>", self.fetchShip)
+
+        self.shipsLabel.pack()
         self.shipsCombobox.pack()
         # 
 
-        self.confirm = tk.Button(self.root, text="Enviar", command=self.controller.sendOrder)
+        # botão de confirmação
+        self.confirm = tk.Button(self.base, text="Enviar", command=self.controller.sendOrder)
+
         self.confirm.pack()
+        #
+
+        self.top.pack(side=tk.TOP)
+        self.base.pack(side=tk.BOTTOM)
 
     def fetchCustomerid(self, event):
         contactname = self.customersCombobox.get()
