@@ -8,5 +8,15 @@ class Controller:
         self.model = Model()
         self.view = View(self.root, self)
 
+    def fillContactnames(self):
+        customers = self.model.fillContactnames()
+
+        return customers
+
+    def fetchCustomerid(self, contactname):
+        customerid = self.model.fetchCustomerid(contactname)
+
+        return customerid
+
     def sendOrder(self):
-        print("Pedido enviado!") # teste
+        self.model.sendOrder()

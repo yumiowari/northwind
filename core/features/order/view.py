@@ -1,4 +1,5 @@
 import tkinter as tk
+from tkinter import ttk
 
 class View():
     def __init__(self, root, controller):
@@ -8,6 +9,16 @@ class View():
 
         self.root.title("Realizar Pedido")
         self.root.geometry("400x400")
+
+        # nome do cliente
+        self.customerid = tk.StringVar()
+        self.contactnames = self.controller.fillContactnames()
+        
+        self.combobox = ttk.Combobox(self.root, values=self.contactnames)
+        self.combobox.bind("<<ComboboxSelected>>", self.fetchCustomerid)
+
+        self.combobox.pack()
+        #
 
         self.orderid = tk.StringVar()
         self.orderid.trace_add("write", self.checkOrderid)
@@ -22,13 +33,6 @@ class View():
         self.orderdateLabel = tk.Label(self.root, text="Data do pedido:")
         self.orderdateLabel.pack()
         self.orderdateEntry.pack()
-
-        self.customer = tk.StringVar()
-        self.customer.trace_add("write", self.checkCustomer)
-        self.customerEntry = tk.Entry(self.root, textvariable=self.customer)
-        self.customerLabel = tk.Label(self.root, text="Nome do cliente:")
-        self.customerLabel.pack()
-        self.customerEntry.pack()
 
         self.employee = tk.StringVar()
         self.employee.trace_add("write", self.checkEmployee)
@@ -54,6 +58,14 @@ class View():
         self.confirm = tk.Button(self.root, text="Enviar", command=self.controller.sendOrder)
         self.confirm.pack()
 
+    def fetchCustomerid(self, event):
+        contactname = self.combobox.get()
+
+        customerid = self.controller.fetchCustomerid(contactname)
+
+        print(customerid)
+        self.customerid.set(customerid)
+
     def checkOrderid(self, var, index, mode):
         orderid = self.orderid.get()
 
@@ -75,17 +87,6 @@ class View():
                 aux += digit
 
         self.orderdate.set(aux)
-
-    def checkCustomer(self, var, index, mode):
-        customer = self.customer.get()
-
-        aux = ""
-
-        for digit in customer:
-            if not digit.isdigit():
-                aux += digit
-
-        self.customer.set(aux)
 
     def checkEmployee(self, var, index, mode):
         employee = self.employee.get()
