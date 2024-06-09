@@ -38,6 +38,40 @@ class View():
         self.employeesCombobox.pack()
         #
 
+        # nome do produto
+        self.product = {}
+        self.productnames = self.controller.fillProductnames()
+
+        self.productsLabel = tk.Label(self.top, text="Nome do produto:")
+        self.productsCombobox = ttk.Combobox(self.top, values=self.productnames, state='readonly')
+        self.productsCombobox.bind("<<ComboboxSelected>>", self.fetchProduct)
+
+        self.productsLabel.pack()
+        self.productsCombobox.pack()
+        #
+
+        # quantidade
+        self.qty = tk.StringVar()
+        self.qty.trace_add("write", self.checkQty)
+
+        self.qtyLabel = tk.Label(self.top, text="Quantidade:")
+        self.qtyEntry = tk.Entry(self.top, textvariable=self.qty)
+
+        self.qtyLabel.pack()
+        self.qtyEntry.pack()
+        #
+
+        # desconto
+        self.discount = tk.StringVar()
+        self.discount.trace_add("write", self.checkDiscount)
+
+        self.discountLabel = tk.Label(self.top, text="Desconto:")
+        self.discountEntry = tk.Entry(self.top, textvariable=self.discount)
+
+        self.discountLabel.pack()
+        self.discountEntry.pack()
+        #
+
         ### datas
         self.datas = tk.Frame(self.top)
 
@@ -81,13 +115,12 @@ class View():
         self.freightLabel = tk.Label(self.top, text="Frete:")
         self.freightEntry = tk.Entry(self.top, textvariable=self.freight)
 
-        self.freightLabel.pack()    
+        self.freightLabel.pack()
         self.freightEntry.pack()
         #
 
         # barco
         self.ship = {}
-        self.shipname = tk.StringVar()
         self.shipnames = self.controller.fillShipnames()
 
         self.shipsLabel = tk.Label(self.top, text="Embarcação:")
@@ -96,7 +129,7 @@ class View():
 
         self.shipsLabel.pack()
         self.shipsCombobox.pack()
-        # 
+        #
 
         # botão de confirmação
         self.confirm = tk.Button(self.base, text="Enviar", command=self.controller.sendOrder)
@@ -121,6 +154,37 @@ class View():
 
         self.employeeid.set(employeeid)
 
+    def fetchProduct(self, event):
+        productname = self.productsCombobox.get()
+
+        self.product = self.controller.fetchProduct(productname)
+
+    def checkQty(self, var, index, mode):
+        qty = self.qty.get()
+
+        aux = ""
+
+        for digit in qty:
+            if digit.isdigit():
+                aux += digit
+
+        self.qty.set(aux)
+
+    def checkDiscount(self, var, index, mode):
+        discount = self.discount.get()
+
+        flag = False
+
+        aux = ""
+
+        for digit in discount:
+            if digit.isdigit() or (digit == '.' and flag == False):
+                aux += digit
+                if digit == '.':
+                    flag = True
+
+        self.discount.set(aux)
+
     def checkFreight(self, var, index, mode):
         freight = self.freight.get()
 
@@ -138,7 +202,5 @@ class View():
 
     def fetchShip(self, event):
         shipname = self.shipsCombobox.get()
-
-        self.shipname.set(shipname)
 
         self.ship = self.controller.fetchShip(shipname)
